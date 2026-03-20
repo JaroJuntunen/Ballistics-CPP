@@ -27,6 +27,12 @@ public:
 	bool	isMovingLeft()	const { return m_moveLeft; }
 	bool	isMovingRight()	const { return m_moveRight; }
 
+	bool	shouldShootProjectiles()	const{return m_shootProjectile;}
+	void	clearShootProjectiles()		{m_shootProjectile = false;}
+
+	float	mouseX() const { return m_mouseX; }
+	float	mouseY() const { return m_mouseY; }
+
 private:
 	bool	m_quit		= false;
 	bool	m_resized	= false;
@@ -45,4 +51,9 @@ private:
 
 	bool	m_moveLeft  = false;
 	bool	m_moveRight = false;
+
+	bool	m_shootProjectile = false;
+
+	float	m_mouseX = 0.0f;
+	float	m_mouseY = 0.0f;
 };

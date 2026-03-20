@@ -13,17 +13,23 @@ void InputHandler::handleEvent(const SDL_Event& event)
 		m_newWidth   = event.window.data1;
 		m_newHeight  = event.window.data2;
 	}
-	if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT) {
-		m_dragging   = true;
-		m_lastMouseX = event.button.x;
-		m_lastMouseY = event.button.y;
+	if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			m_dragging   = true;
+			m_lastMouseX = event.button.x;
+			m_lastMouseY = event.button.y;
+		}
+		if (event.button.button == SDL_BUTTON_RIGHT) {
+			m_setCameraToLauncher = true;
+		}
 	}
-	if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_RIGHT) {
-		m_setCameraToLauncher = true;
-	}
-
 	if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && event.button.button == SDL_BUTTON_LEFT)
 		m_dragging = false;
+
+	if (event.type == SDL_EVENT_MOUSE_MOTION) {
+		m_mouseX = event.motion.x;
+		m_mouseY = event.motion.y;
+	}
 
 	if (event.type == SDL_EVENT_MOUSE_MOTION && m_dragging) {
 		m_dragDeltaX += event.motion.x - m_lastMouseX;
@@ -45,6 +51,8 @@ void InputHandler::handleEvent(const SDL_Event& event)
 			m_moveLeft = true;
 		if (event.key.scancode == SDL_SCANCODE_D)
 			m_moveRight = true;
+		if (event.key.scancode == SDL_SCANCODE_SPACE)
+			m_shootProjectile = true;
 	}
 
 	if (event.type == SDL_EVENT_KEY_UP) {

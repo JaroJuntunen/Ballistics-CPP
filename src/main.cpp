@@ -1,7 +1,9 @@
 #include <SDL3/SDL.h>
 #include <iostream>
+#include <memory>
 #include "renderer/Renderer.hpp"
 #include "input/InputHandler.hpp"
+#include "simulation/Projectile.hpp"
 
 static constexpr int WINDOW_WIDTH  = 1280;
 static constexpr int WINDOW_HEIGHT = 720;
@@ -13,12 +15,14 @@ int main()
 		InputHandler input;
 
 		SDL_Event event;
+		Envirnoment envirnoment;
 
 		static constexpr int    TARGET_FPS   = 60;
 		const         Uint64    FREQ         = SDL_GetPerformanceFrequency();
 		const         Uint64    FRAME_TICKS  = FREQ / TARGET_FPS;
 
 		float smoothFPS = (float)TARGET_FPS;
+		std::unique_ptr<Projectile> projectile = nullptr;
 
 		while (!input.shouldQuit()) {
 			Uint64 frameStart = SDL_GetPerformanceCounter();
@@ -45,15 +49,32 @@ int main()
 				renderer.setCameraToLauncher();
 				input.clearMoveCameraToLauncher();
 			}
+
+			if (input.shouldShootProjectiles()) {
+				Vec2 launchPos  = renderer.getLauncherPosition();
+				Vec2 mouseWorld = renderer.screenToWorld(input.mouseX(), input.mouseY());
+				Vec2 dir        = mouseWorld - launchPos;
+				projectile = std::make_unique<Projectile>(launchPos, dir);
+				input.clearShootProjectiles();
+			}
 			
 			constexpr float LAUNCHER_SPEED = 0.75f; // m/frame
 			if (input.isMovingLeft()) renderer.moveLauncher(-LAUNCHER_SPEED);
 			if (input.isMovingRight()) renderer.moveLauncher( LAUNCHER_SPEED);
 			
+			constexpr float DT = 1.0f / TARGET_FPS;
+			if (projectile && projectile->isActive()) {
+				projectile->step(DT);
+				Vec2 pos = projectile->getPosition();
+				if (pos.y <= envirnoment.getWorldHeight(pos.x))
+					projectile->deactivate();
+			}
 			renderer.update();
 			renderer.clear();
 			renderer.renderTerrain();
 			renderer.renderLauncher();
+			if (projectile)
+				renderer.renderProjectile(*projectile);
 
 			Uint64 elapsed = SDL_GetPerformanceCounter() - frameStart;
 			if (elapsed < FRAME_TICKS) {

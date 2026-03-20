@@ -99,28 +99,29 @@ void Renderer::setCameraToLauncher()
 
 void Renderer::update()
 {
-	if (!m_movingToLauncher)
-		return;
+	if (m_movingToLauncher) {
 
-	float dx   = m_launcherPosition.x - m_camPosition.x;
-	float dy   = m_launcherPosition.y - m_camPosition.y;
-	float dist = std::sqrt(dx * dx + dy * dy);
-
-	constexpr float kFraction = 0.04f;
-	constexpr float kMinSpeed = 0.3f;
-	constexpr float kMaxSpeed = 40.0f;
-
-	if (dist < kMinSpeed) {
-		m_camPosition            = m_launcherPosition;
-		m_movingToLauncher       = false;
-		m_cameraLockedToLauncher = true;
-		return;
+		
+		float dx   = m_launcherPosition.x - m_camPosition.x;
+		float dy   = m_launcherPosition.y - m_camPosition.y;
+		float dist = std::sqrt(dx * dx + dy * dy);
+		
+		constexpr float kFraction = 0.04f;
+		constexpr float kMinSpeed = 0.3f;
+		constexpr float kMaxSpeed = 40.0f;
+		
+		if (dist < kMinSpeed) {
+			m_camPosition            = m_launcherPosition;
+			m_movingToLauncher       = false;
+			m_cameraLockedToLauncher = true;
+			return;
+		}
+		
+		float speed = std::clamp(dist * kFraction, kMinSpeed, kMaxSpeed);
+		float step  = speed / dist;
+		m_camPosition.x += dx * step;
+		m_camPosition.y += dy * step;
 	}
-
-	float speed = std::clamp(dist * kFraction, kMinSpeed, kMaxSpeed);
-	float step  = speed / dist;
-	m_camPosition.x += dx * step;
-	m_camPosition.y += dy * step;
 }
 
 void Renderer::zoom(float delta)
@@ -146,6 +147,22 @@ float Renderer::getTerrainHeightAsScreenY(uint16_t pixelX)
 	float pixelY = (yCameraOfset * m_scale);
 
 	return m_height*0.5 - pixelY;
+}
+
+void Renderer::renderProjectile(const Projectile& p)
+{
+	if (!p.isActive())
+		return;
+
+	Vec2  pos     = p.getPosition();
+	float screenX = (pos.x - m_camPosition.x) * m_scale + m_width  * 0.5f;
+	float screenY =  m_height * 0.5f - (pos.y - m_camPosition.y) * m_scale;
+
+	constexpr float RADIUS = 3.0f;
+	SDL_FRect rect { screenX - RADIUS, screenY - RADIUS, RADIUS * 2.0f, RADIUS * 2.0f };
+
+	SDL_SetRenderDrawColor(m_renderer, 255, 220, 50, 255);
+	SDL_RenderFillRect(m_renderer, &rect);
 }
 
 void Renderer::renderFPS(float fps)
