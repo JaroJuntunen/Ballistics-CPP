@@ -1,41 +1,32 @@
-# Prerequisites
-*.d
+# CMake build output
+build/
 
-# Compiled Object files
-*.slo
-*.lo
+# Compiled objects and static libs
 *.o
 *.obj
+*.a
+*.lib
+*.lo
+*.slo
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+# Compiled dynamic libraries
 *.so
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
 # Executables
 *.exe
 *.out
-*.app
 
-# debug information files
+# Debug info
+*.pdb
+*.ilk
 *.dwo
+
+# Visual Studio
+.vs/
+*.user
+
+# Precompiled headers
+*.gch
+*.pch

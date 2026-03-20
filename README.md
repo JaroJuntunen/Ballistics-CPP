@@ -57,37 +57,38 @@ ballistic-sim/
 Roadmap
 Stage 1 — Get something on screen
 
- Create SDL3 window
- Draw a point moving under gravity only (no drag)
- Trace the path as the projectile moves
- Show ground line and landing point
+- [x] Create SDL3 window
+- [x] Show ground line
+- [ ] Draw a point moving under gravity only (no drag)
+- [ ] Trace the path as the projectile moves
+- [ ] Show landing point
 
 Stage 2 — Real physics
 
- Add aerodynamic drag
- Decompose drag into x/y components correctly
- Add wind as a parameter
- Compare trajectory with and without drag visually
+- [ ] Add aerodynamic drag
+- [ ] Decompose drag into x/y components correctly
+- [ ] Add wind as a parameter
+- [ ] Compare trajectory with and without drag visually
 
 Stage 3 — User control
 
- Adjust launch angle with keyboard
- Adjust muzzle velocity
- Adjust wind speed and direction
- Reset and re-fire
+- [ ] Adjust launch angle with keyboard
+- [ ] Adjust muzzle velocity
+- [ ] Adjust wind speed and direction
+- [ ] Reset and re-fire
 
 Stage 4 — C++ structure
 
- Refactor into proper classes (Projectile, Environment, Simulator, Renderer)
- Use smart pointers where appropriate
- Separate simulation logic fully from rendering
+- [ ] Refactor into proper classes (Projectile, Environment, Simulator, Renderer)
+- [ ] Use smart pointers where appropriate
+- [ ] Separate simulation logic fully from rendering
 
 Stage 5 — Extras (if motivated)
 
- Multiple projectile types with different mass and drag coefficients
- Coriolis effect toggle
- Air density variation with altitude
- Export trajectory data to CSV
+- [ ] Multiple projectile types with different mass and drag coefficients
+- [ ] Coriolis effect toggle
+- [ ] Air density variation with altitude
+- [ ] Export trajectory data to CSV
 
 
 Dependencies
