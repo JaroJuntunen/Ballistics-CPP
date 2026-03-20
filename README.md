@@ -34,25 +34,26 @@ Coriolis effect (optional, long range):
 ac = 2 * v × Ω
 Where Ω is Earth's angular velocity vector. Relevant at ranges above ~1km.
 
-Project Structure
-ballistic-sim/
+## Project Structure
+
+```
+Ballistics-CPP/
 ├── CMakeLists.txt
 ├── README.md
-├── src/
-│   ├── main.cpp               # Entry point, main loop
-│   ├── simulation/
-│   │   ├── Projectile.hpp     # Projectile state and properties
-│   │   ├── Projectile.cpp
-│   │   ├── Environment.hpp    # Wind, air density, gravity
-│   │   ├── Environment.cpp
-│   │   └── Simulator.hpp      # Runs the physics update loop
-│   │   └── Simulator.cpp
-│   ├── renderer/
-│   │   ├── Renderer.hpp       # SDL2 rendering, draws trajectory and UI
-│   │   └── Renderer.cpp
-│   └── input/
-│       ├── InputHandler.hpp   # Keyboard input, parameter adjustment
-│       └── InputHandler.cpp
+└── src/
+    ├── main.cpp
+    ├── simulation/
+    │   ├── Environment.hpp/.cpp
+    │   ├── Projectile.hpp/.cpp
+    │   └── Simulator.hpp/.cpp
+    ├── renderer/
+    │   └── Renderer.hpp/.cpp
+    ├── input/
+    │   └── InputHandler.hpp/.cpp
+    └── util/
+        └── math/
+            └── Vec2.hpp
+```
 
 Roadmap
 Stage 1 — Get something on screen
