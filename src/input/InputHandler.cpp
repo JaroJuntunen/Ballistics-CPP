@@ -40,5 +40,17 @@ void InputHandler::handleEvent(const SDL_Event& event)
 			m_zoomDelta += 1.0f;
 		if (event.key.scancode == SDL_SCANCODE_KP_MINUS)
 			m_zoomDelta -= 1.0f;
+
+		if (event.key.scancode == SDL_SCANCODE_A)
+			m_moveLeft = true;
+		if (event.key.scancode == SDL_SCANCODE_D)
+			m_moveRight = true;
+	}
+
+	if (event.type == SDL_EVENT_KEY_UP) {
+		if (event.key.scancode == SDL_SCANCODE_A)
+			m_moveLeft = false;
+		if (event.key.scancode == SDL_SCANCODE_D)
+			m_moveRight = false;
 	}
 }

@@ -28,6 +28,9 @@ public:
 	SDL_Renderer* get() const { return m_renderer; }
 
 	void renderTerrain();
+	void renderLauncher();
+	void renderFPS(float fps);
+	void moveLauncher(float dx);
 	void moveCamera(float dx, float dy);
 	void setCameraToLauncher();
 	void zoom(float delta);
@@ -47,5 +50,6 @@ public:
 	int				m_height;
 
 	Envirnoment		m_envirnoment;
-	bool			m_movingToLauncher = false;
+	bool			m_movingToLauncher      = false;
+	bool			m_cameraLockedToLauncher = true;
 };

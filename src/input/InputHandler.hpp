@@ -24,6 +24,9 @@ public:
 	float	zoomDelta()		const { return m_zoomDelta; }
 	void	clearZoom()			  { m_zoomDelta = 0.0f; }
 
+	bool	isMovingLeft()	const { return m_moveLeft; }
+	bool	isMovingRight()	const { return m_moveRight; }
+
 private:
 	bool	m_quit		= false;
 	bool	m_resized	= false;
@@ -39,4 +42,7 @@ private:
 	bool	m_setCameraToLauncher = false;
 
 	float	m_zoomDelta = 0.0f;
+
+	bool	m_moveLeft  = false;
+	bool	m_moveRight = false;
 };

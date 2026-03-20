@@ -18,6 +18,8 @@ int main()
 		const         Uint64    FREQ         = SDL_GetPerformanceFrequency();
 		const         Uint64    FRAME_TICKS  = FREQ / TARGET_FPS;
 
+		float smoothFPS = (float)TARGET_FPS;
+
 		while (!input.shouldQuit()) {
 			Uint64 frameStart = SDL_GetPerformanceCounter();
 
@@ -38,16 +40,20 @@ int main()
 				renderer.zoom(input.zoomDelta());
 				input.clearZoom();
 			}
-
+			
 			if (input.shouldMoveCameraToLauncher()) {
 				renderer.setCameraToLauncher();
 				input.clearMoveCameraToLauncher();
 			}
-
+			
+			constexpr float LAUNCHER_SPEED = 0.75f; // m/frame
+			if (input.isMovingLeft()) renderer.moveLauncher(-LAUNCHER_SPEED);
+			if (input.isMovingRight()) renderer.moveLauncher( LAUNCHER_SPEED);
+			
 			renderer.update();
 			renderer.clear();
 			renderer.renderTerrain();
-			renderer.present();
+			renderer.renderLauncher();
 
 			Uint64 elapsed = SDL_GetPerformanceCounter() - frameStart;
 			if (elapsed < FRAME_TICKS) {
@@ -55,6 +61,13 @@ int main()
 				if (msRemaining > 0)
 					SDL_Delay(msRemaining);
 			}
+
+			Uint64 frameTime = SDL_GetPerformanceCounter() - frameStart;
+			if (frameTime > 0)
+				smoothFPS = smoothFPS * 0.95f + (float)FREQ / (float)frameTime * 0.05f;
+
+			renderer.renderFPS(smoothFPS);
+			renderer.present();
 		}
 	}
 	catch (const std::exception& e) {
