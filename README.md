@@ -55,22 +55,22 @@ ay = -g - (Fd / m) * (vy / v)
 ## Project Structure
 
 ```
-Ballistics-CPP/
+Ballistics-CPP
 ├── CMakeLists.txt
 ├── README.md
-└── src/
+└── src
     ├── main.cpp
-    ├── simulation/
-    │   ├── Environment.hpp/.cpp    # Terrain height (Perlin noise)
-    │   ├── Projectile.hpp/.cpp     # Projectile state, physics step, path recording
-    │   └── Simulator.hpp/.cpp      # (planned) physics update loop
-    ├── renderer/
-    │   └── Renderer.hpp/.cpp       # SDL3 rendering, camera, world↔screen conversion
-    ├── input/
-    │   └── InputHandler.hpp/.cpp   # Keyboard and mouse input
+    ├── simulation
+    │   ├── Environment.hpp/.cpp
+    │   ├── Projectile.hpp/.cpp
+    │   └── Simulator.hpp/.cpp
+    ├── renderer
+    │   └── Renderer.hpp/.cpp
+    ├── input
+    │   └── InputHandler.hpp/.cpp
     └── util/
         └── math/
-            └── Vec2.hpp            # 2D vector with operators and normalize
+            └── Vec2.hpp
 ```
 
 ## Roadmap
