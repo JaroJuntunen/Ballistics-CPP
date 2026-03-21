@@ -7,9 +7,11 @@ Built as a personal project to practice modern C++ and explore the physics behin
 ## Features
 
 - Real-time trajectory simulation and visualization
+- Aerodynamic drag simulation (7.62mm bullet defaults)
+- Side-by-side drag vs. no-drag trajectory comparison
 - Procedurally generated terrain using Perlin noise
-- Mouse-aimed projectile firing
-- Trajectory path tracing with landing point indication
+- Mouse-aimed projectile firing, multiple projectiles simultaneously
+- Trajectory path tracing — trail persists after landing
 - Smooth camera with lock/follow system
 - Movable launcher
 
@@ -17,7 +19,10 @@ Built as a personal project to practice modern C++ and explore the physics behin
 
 | Input | Action |
 |---|---|
-| `Space` | Fire projectile toward mouse cursor |
+| `Space` | Fire with drag (yellow dot, white trail) |
+| `Shift+Space` | Fire without drag (red dot, yellow trail) |
+| `Ctrl+Space` | Fire both simultaneously for comparison |
+| `C` | Clear oldest projectile |
 | `A` / `D` | Move launcher left / right |
 | `Left mouse drag` | Pan camera |
 | `Right mouse click` | Return camera to launcher |
@@ -32,14 +37,14 @@ The simulator uses Euler integration to update position and velocity each frame.
 ay = -g        (g = 9.81 m/s²)
 ```
 
-**Aerodynamic drag** *(planned)*:
+**Aerodynamic drag:**
 ```
 Fd = 0.5 * Cd * rho * A * v²
 ```
 Where:
-- `Cd` = drag coefficient (depends on projectile shape)
+- `Cd` = drag coefficient (0.3 for a bullet)
 - `rho` = air density (1.225 kg/m³ at sea level)
-- `A` = cross-sectional area of the projectile
+- `A` = cross-sectional area of the projectile (π * r²)
 - `v` = current speed
 
 Drag acts opposite to the velocity vector, decomposed into x and y components:
@@ -85,10 +90,10 @@ Ballistics-CPP
 - [x] Show landing point (trail persists after landing)
 
 **Stage 2 — Real physics**
-- [ ] Aerodynamic drag
-- [ ] Decompose drag into x/y components correctly
+- [x] Aerodynamic drag
+- [x] Decompose drag into x/y components correctly
+- [x] Visual comparison of trajectories with and without drag
 - [ ] Wind as a parameter
-- [ ] Visual comparison of trajectories with and without drag
 
 **Stage 3 — User control**
 - [ ] Adjust muzzle velocity

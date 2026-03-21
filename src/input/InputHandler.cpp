@@ -51,8 +51,16 @@ void InputHandler::handleEvent(const SDL_Event& event)
 			m_moveLeft = true;
 		if (event.key.scancode == SDL_SCANCODE_D)
 			m_moveRight = true;
-		if (event.key.scancode == SDL_SCANCODE_SPACE)
+		if (event.key.scancode == SDL_SCANCODE_SPACE && !(event.key.mod & SDL_KMOD_SHIFT))
 			m_shootProjectile = true;
+		if (event.key.scancode == SDL_SCANCODE_SPACE && (event.key.mod & SDL_KMOD_SHIFT))
+			m_shootProjectileNoDrag = true;
+		if (event.key.scancode == SDL_SCANCODE_SPACE && (event.key.mod & SDL_KMOD_CTRL)){
+			m_shootProjectile = true;
+			m_shootProjectileNoDrag = true;
+		}
+		if (event.key.scancode == SDL_SCANCODE_C)
+			m_clrearProjectiles = true;
 	}
 
 	if (event.type == SDL_EVENT_KEY_UP) {

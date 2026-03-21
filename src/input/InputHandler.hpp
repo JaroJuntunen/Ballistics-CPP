@@ -29,6 +29,11 @@ public:
 
 	bool	shouldShootProjectiles()	const{return m_shootProjectile;}
 	void	clearShootProjectiles()		{m_shootProjectile = false;}
+	bool	shouldShootProjectilesNoDrag()	const{return m_shootProjectileNoDrag;}
+	void	clearShootProjectilesNoDrag()		{m_shootProjectileNoDrag = false;}
+
+	bool	shouldClearProjectile()		{return m_clrearProjectiles;}
+	void	clearClearProjectiles()		{m_clrearProjectiles = false;};
 
 	float	mouseX() const { return m_mouseX; }
 	float	mouseY() const { return m_mouseY; }
@@ -53,6 +58,8 @@ private:
 	bool	m_moveRight = false;
 
 	bool	m_shootProjectile = false;
+	bool	m_shootProjectileNoDrag = false;
+	bool	m_clrearProjectiles = false;
 
 	float	m_mouseX = 0.0f;
 	float	m_mouseY = 0.0f;

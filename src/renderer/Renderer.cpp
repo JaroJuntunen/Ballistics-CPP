@@ -151,25 +151,44 @@ float Renderer::getTerrainHeightAsScreenY(uint16_t pixelX)
 
 void Renderer::renderProjectile(const Projectile& p)
 {
+	const std::vector<Vec2>& path = p.getPathReference();
+	bool drag = p.isDragEnabled();
+
+	// dot colour: yellow with drag, red without
+	if (drag)
+		SDL_SetRenderDrawColor(m_renderer, 255, 220, 50, 255);
+	else
+		SDL_SetRenderDrawColor(m_renderer, 220, 50, 50, 255);
+
 	Vec2  pos     = p.getPosition();
 	float screenX = (pos.x - m_camPosition.x) * m_scale + m_width  * 0.5f;
 	float screenY =  m_height * 0.5f - (pos.y - m_camPosition.y) * m_scale;
-	const std::vector<Vec2> &pathPoints = p.getPathReference();
-
 	constexpr float RADIUS = 3.0f;
 	SDL_FRect rect { screenX - RADIUS, screenY - RADIUS, RADIUS * 2.0f, RADIUS * 2.0f };
-
-	SDL_SetRenderDrawColor(m_renderer, 255, 220, 50, 255);
 	SDL_RenderFillRect(m_renderer, &rect);
-	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
-	for (Vec2 pathPoint : pathPoints)
-	{
-		screenX = (pathPoint.x - m_camPosition.x) * m_scale + m_width  * 0.5f;
-		screenY =  m_height * 0.5f - (pathPoint.y - m_camPosition.y) * m_scale;
-		SDL_RenderPoint(m_renderer, screenX, screenY);
-	}
-	
 
+	// path colour: white for drag, yellow for no-drag
+	if (drag)
+		SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+	else
+		SDL_SetRenderDrawColor(m_renderer, 255, 220, 50, 255);
+
+	for (size_t i = 1; i < path.size(); i++)
+	{
+		float x1 = (path[i-1].x - m_camPosition.x) * m_scale + m_width  * 0.5f;
+		float y1 =  m_height * 0.5f - (path[i-1].y - m_camPosition.y) * m_scale;
+		float x2 = (path[i].x   - m_camPosition.x) * m_scale + m_width  * 0.5f;
+		float y2 =  m_height * 0.5f - (path[i].y   - m_camPosition.y) * m_scale;
+		SDL_RenderLine(m_renderer, x1, y1, x2, y2);
+	}
+
+	// connect last path point to current projectile position
+	if (!path.empty())
+	{
+		float x1 = (path.back().x - m_camPosition.x) * m_scale + m_width  * 0.5f;
+		float y1 =  m_height * 0.5f - (path.back().y - m_camPosition.y) * m_scale;
+		SDL_RenderLine(m_renderer, x1, y1, screenX, screenY);
+	}
 }
 
 void Renderer::renderFPS(float fps)

@@ -22,8 +22,7 @@ int main()
 		const         Uint64    FRAME_TICKS  = FREQ / TARGET_FPS;
 
 		float smoothFPS = (float)TARGET_FPS;
-		std::unique_ptr<Projectile> projectile = nullptr;
-
+		std::vector<std::unique_ptr<Projectile>> projectiles;
 		while (!input.shouldQuit()) {
 			Uint64 frameStart = SDL_GetPerformanceCounter();
 
@@ -50,12 +49,26 @@ int main()
 				input.clearMoveCameraToLauncher();
 			}
 
-			if (input.shouldShootProjectiles()) {
+			if (input.shouldShootProjectiles() || input.shouldShootProjectilesNoDrag()) {
 				Vec2 launchPos  = renderer.getLauncherPosition();
 				Vec2 mouseWorld = renderer.screenToWorld(input.mouseX(), input.mouseY());
 				Vec2 dir        = mouseWorld - launchPos;
-				projectile = std::make_unique<Projectile>(launchPos, dir);
-				input.clearShootProjectiles();
+				if (!input.shouldShootProjectilesNoDrag()){
+					projectiles.push_back(std::make_unique<Projectile>(launchPos, dir, true));
+					input.clearShootProjectiles();
+				}
+				else {
+					std::cout << "No drag\n";
+					projectiles.push_back(std::make_unique<Projectile>(launchPos, dir, false));
+					input.clearShootProjectilesNoDrag();
+				}
+			}
+
+
+			if (input.shouldClearProjectile()){
+				if (projectiles.size() > 0)
+					projectiles.erase(projectiles.begin());
+				input.clearClearProjectiles();
 			}
 			
 			constexpr float LAUNCHER_SPEED = 0.75f; // m/frame
@@ -63,18 +76,27 @@ int main()
 			if (input.isMovingRight()) renderer.moveLauncher( LAUNCHER_SPEED);
 			
 			constexpr float DT = 1.0f / TARGET_FPS;
-			if (projectile && projectile->isActive()) {
-				projectile->step(DT);
-				Vec2 pos = projectile->getPosition();
-				if (pos.y <= envirnoment.getWorldHeight(pos.x))
-					projectile->deactivate();
+			for (std::unique_ptr<Projectile> &projectile : projectiles)
+			{
+				if (projectile->isActive()) {
+					projectile->step(DT);
+					Vec2 pos = projectile->getPosition();
+					if (pos.y <= envirnoment.getWorldHeight(pos.x))
+						projectile->deactivate();
+				}
 			}
+			
+			
 			renderer.update();
 			renderer.clear();
 			renderer.renderTerrain();
 			renderer.renderLauncher();
-			if (projectile)
-				renderer.renderProjectile(*projectile);
+			for (std::unique_ptr<Projectile> &projectile : projectiles)
+			{
+				if (projectile) {
+					renderer.renderProjectile(*projectile);
+				}
+			}
 
 			Uint64 elapsed = SDL_GetPerformanceCounter() - frameStart;
 			if (elapsed < FRAME_TICKS) {
