@@ -20,4 +20,5 @@ void Projectile::step(float dt)
 {
 	m_velocity.y -= GRAVITY * dt;
 	m_position += m_velocity * dt;
+	m_path.push_back(m_position);
 }

@@ -151,22 +151,31 @@ float Renderer::getTerrainHeightAsScreenY(uint16_t pixelX)
 
 void Renderer::renderProjectile(const Projectile& p)
 {
-	if (!p.isActive())
-		return;
-
 	Vec2  pos     = p.getPosition();
 	float screenX = (pos.x - m_camPosition.x) * m_scale + m_width  * 0.5f;
 	float screenY =  m_height * 0.5f - (pos.y - m_camPosition.y) * m_scale;
+	const std::vector<Vec2> &pathPoints = p.getPathReference();
 
 	constexpr float RADIUS = 3.0f;
 	SDL_FRect rect { screenX - RADIUS, screenY - RADIUS, RADIUS * 2.0f, RADIUS * 2.0f };
 
 	SDL_SetRenderDrawColor(m_renderer, 255, 220, 50, 255);
 	SDL_RenderFillRect(m_renderer, &rect);
+	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+	for (Vec2 pathPoint : pathPoints)
+	{
+		screenX = (pathPoint.x - m_camPosition.x) * m_scale + m_width  * 0.5f;
+		screenY =  m_height * 0.5f - (pathPoint.y - m_camPosition.y) * m_scale;
+		SDL_RenderPoint(m_renderer, screenX, screenY);
+	}
+	
+
 }
 
 void Renderer::renderFPS(float fps)
 {
+
+
 	char buf[16];
 	std::snprintf(buf, sizeof(buf), "FPS: %.0f", fps);
 	SDL_SetRenderDrawColor(m_renderer, 220, 220, 220, 255);
