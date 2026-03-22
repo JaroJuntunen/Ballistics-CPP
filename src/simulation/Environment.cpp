@@ -2,33 +2,35 @@
 #include "stb_perlin.h"
 #include "Environment.hpp"
 
-static constexpr float PERLIN_NOISE_FREAGUANCY = 0.05f;
-static constexpr float PERLIN_NOISE_SCALE = 15.0f;
+static constexpr float	PERLIN_NOISE_FREQUENCY	= 0.05f;
+static constexpr float	PERLIN_NOISE_SCALE	= 15.0f;
 
-Envirnoment::Envirnoment()
+Environment::Environment()
 {
-	m_baseWindSpeed.x = -30.0f;
-	m_baseWindSpeed.y = 0.0f;
-	m_windGustSeverity = 2.5f;
-	m_gustFrequancy = 0.3f;
-	m_time = 0.0f;
+	m_baseWindSpeed.x	= -30.0f;
+	m_baseWindSpeed.y	= 0.0f;
+	m_windGustSeverity	= 2.5f;
+	m_gustFrequency		= 0.3f;
+	m_time			= 0.0f;
 }
 
-float Envirnoment::getWorldHeight(float worldX)
+//	World
+
+float	Environment::getWorldHeight(float worldX)
 {
-	return ((stb_perlin_noise3(worldX * PERLIN_NOISE_FREAGUANCY, 0.0, 0.0,0,0,0) * PERLIN_NOISE_SCALE));
+	return ((stb_perlin_noise3(worldX * PERLIN_NOISE_FREQUENCY, 0.0, 0.0, 0, 0, 0) * PERLIN_NOISE_SCALE));
 }
 
-Vec2 Envirnoment::getWindVelocity(float dt)
+Vec2	Environment::getWindVelocity(float dt)
 {
 	m_time += dt;
-	float windGustOfsetX = stb_perlin_noise3(m_time * m_gustFrequancy, 0.0,0.0,0.0,0.0,0.0);
-	float windGustOfsetY = stb_perlin_noise3(m_time * m_gustFrequancy, 100.0,0.0,0.0,0.0,0.0);
-	windGustOfsetX *= m_windGustSeverity;
-	windGustOfsetY *= m_windGustSeverity;
+	float	windGustOffsetX	= stb_perlin_noise3(m_time * m_gustFrequency,   0.0, 0.0, 0.0, 0.0, 0.0);
+	float	windGustOffsetY	= stb_perlin_noise3(m_time * m_gustFrequency, 100.0, 0.0, 0.0, 0.0, 0.0);
+	windGustOffsetX *= m_windGustSeverity;
+	windGustOffsetY *= m_windGustSeverity;
 
 	Vec2	windSpeed;
-	windSpeed.x = m_baseWindSpeed.x + windGustOfsetX;
-	windSpeed.y = m_baseWindSpeed.y + windGustOfsetY;
+	windSpeed.x	= m_baseWindSpeed.x + windGustOffsetX;
+	windSpeed.y	= m_baseWindSpeed.y + windGustOffsetY;
 	return windSpeed;
 }
