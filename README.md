@@ -53,7 +53,24 @@ ax = -(Fd / m) * (vx / v)
 ay = -g - (Fd / m) * (vy / v)
 ```
 
-**Wind** *(planned)*: constant horizontal acceleration offset.
+**Wind:**
+
+Wind is simulated as a base velocity plus dynamic gusts using Perlin noise:
+```
+windVelocity(t) = baseWind + perlinGust(t)
+```
+Drag is computed against the relative airspeed, not the projectile's ground velocity:
+```
+vRel = v_projectile - v_wind
+```
+This means wind directly affects drag magnitude and direction.
+
+**Altitude-varying air density:**
+```
+rho(h) = rho_0 * exp(-h / 8500)
+```
+Where `rho_0 = 1.225 kg/m³` at sea level and `8500 m` is the atmospheric scale height.
+Air density decreases with altitude, reducing drag at higher elevations.
 
 **Coriolis effect** *(optional, long range)*: relevant at ranges above ~1 km.
 
@@ -93,9 +110,12 @@ Ballistics-CPP
 - [x] Aerodynamic drag
 - [x] Decompose drag into x/y components correctly
 - [x] Visual comparison of trajectories with and without drag
-- [ ] Wind as a parameter
+- [x] Wind simulation with Perlin noise gusts
+- [x] Drag computed against relative airspeed (wind-aware)
+- [x] Altitude-varying air density (barometric formula)
 
 **Stage 3 — User control**
+- [ ] Dear ImGui UI for runtime parameter adjustment
 - [ ] Adjust muzzle velocity
 - [ ] Adjust wind speed and direction
 - [ ] Reset and re-fire
@@ -103,7 +123,6 @@ Ballistics-CPP
 **Stage 4 — Extras (if motivated)**
 - [ ] Multiple projectile types (different mass and drag coefficients)
 - [ ] Coriolis effect toggle
-- [ ] Air density variation with altitude
 - [ ] Export trajectory data to CSV
 
 ## Dependencies

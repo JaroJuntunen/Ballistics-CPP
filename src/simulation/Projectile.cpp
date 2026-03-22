@@ -26,24 +26,25 @@ Projectile::Projectile(Vec2 startPos, Vec2 dir, bool dragEnabled , float speed, 
 	m_dragEnabled = dragEnabled;
 }
 
-
-void Projectile::step(float dt)
+void Projectile::step(float dt, Vec2 windWelocity)
 {
 	if(m_dragEnabled){
+		Vec2	relativeVelocity = m_velocity - windWelocity;
+		float	velocity = std::sqrt((relativeVelocity.x * relativeVelocity.x) + (relativeVelocity.y * relativeVelocity.y));
+		float	relativeAirDencity =  AIRDENCITY * std::exp(-m_position.y / 8500.0f);
+		float	dragForce = 0.5f * m_dragCoeficiency * relativeAirDencity * m_crossSectionalArea * (velocity * velocity);
+		float	deceleration = dragForce / m_mass; 
 
-		float velocity = std::sqrt((m_velocity.x * m_velocity.x) + (m_velocity.y * m_velocity.y));
-		float dragForce = 0.5f * m_dragCoeficiency * AIRDENCITY * m_crossSectionalArea * (velocity * velocity);
-		float deceleration = dragForce / m_mass; 
-		
-		m_velocity.x -= deceleration * (m_velocity.x / velocity) * dt;
-		m_velocity.y -= (GRAVITY + (deceleration * (m_velocity.y / velocity))) * dt;
+		m_velocity.x -= deceleration * (relativeVelocity.x / velocity) * dt;
+		m_velocity.y -= (GRAVITY + (deceleration * (relativeVelocity.y / velocity))) * dt;
 	}
 	else {
 		m_velocity.y -= GRAVITY * dt;
 		m_noDragOptimizationDt += dt;
 	}
 	m_position += m_velocity * dt;
-	
+	if (m_position.y <= m_env.getWorldHeight(m_position.x))
+		m_active = false;
 	if (m_dragEnabled) {
 		m_path.push_back(m_position);
 	}

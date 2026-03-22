@@ -13,9 +13,9 @@ int main()
 	try {
 		Renderer renderer("Ballistics", WINDOW_WIDTH, WINDOW_HEIGHT);
 		InputHandler input;
+		Envirnoment env;
 
 		SDL_Event event;
-		Envirnoment envirnoment;
 
 		static constexpr int    TARGET_FPS   = 60;
 		const         Uint64    FREQ         = SDL_GetPerformanceFrequency();
@@ -76,13 +76,11 @@ int main()
 			if (input.isMovingRight()) renderer.moveLauncher( LAUNCHER_SPEED);
 			
 			constexpr float DT = 1.0f / TARGET_FPS;
+			Vec2	windVelocity = env.getWindVelocity(DT);
 			for (std::unique_ptr<Projectile> &projectile : projectiles)
 			{
 				if (projectile->isActive()) {
-					projectile->step(DT);
-					Vec2 pos = projectile->getPosition();
-					if (pos.y <= envirnoment.getWorldHeight(pos.x))
-						projectile->deactivate();
+					projectile->step(DT, windVelocity);
 				}
 			}
 			
