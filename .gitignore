@@ -30,3 +30,6 @@ build/
 # Precompiled headers
 *.gch
 *.pch
+
+# ImGui saved window layout
+imgui.ini
