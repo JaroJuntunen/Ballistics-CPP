@@ -157,11 +157,9 @@ cmake --build build
 - [x] Wind speed, direction, gust severity and frequency
 - [x] Lockable firing direction with live angle display
 
-**Stage 4 — Possible extensions**
-- [ ] Coriolis effect toggle (relevant at ranges above ~1 km)
-- [ ] Multiple saved projectile presets
-- [ ] Export trajectory data to CSV
+**Stage 4 — Full 3D rebuild**
 
+The 2D model has a natural ceiling — effects like Coriolis deflection and spin drift are lateral forces that simply cannot be observed in a side-view plane. The logical next step is a full rebuild in 3D with an OpenGL renderer, where the complete ballistic model becomes demonstrable. The 3D version will be private for now, but when it haves basic functionality it will be linked and made public.
 
 ## AI usage
 
