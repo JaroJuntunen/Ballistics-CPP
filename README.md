@@ -7,6 +7,10 @@ Built as a personal project to strengthen C++ skills and explore the physics beh
 
 ---
 
+![Simulation screenshot](docs/simulation.png)
+
+---
+
 ## Technical highlights
 
 - **Modern C++17** — RAII resource management, `std::unique_ptr`, `constexpr`, structured code separation
